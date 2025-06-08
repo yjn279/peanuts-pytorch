@@ -1,0 +1,52 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Development Setup
+
+## Project Configuration
+
+The project is configured via [pyproject.toml](mdc:pyproject.toml) with the following key details:
+
+- **Python Version**: >=3.12
+- **Package Manager**: UV (evidenced by [uv.lock](mdc:uv.lock))
+- **Version**: 0.2.0
+- **Name**: peanuts
+
+## Dependencies
+
+### Core Dependencies
+- **torch>=2.7.1**: PyTorch deep learning framework
+- **torchvision>=0.22.1**: Computer vision utilities
+- **obspy>=1.4.2**: Seismological data processing
+- **hydra-core>=1.3.2**: Configuration management
+- **numpy>=2.3.0**: Numerical computing
+- **pandas>=2.3.0**: Data manipulation
+
+### Development Dependencies
+- **ruff>=0.11.13**: Fast Python linter and formatter
+- **ty>=0.0.1a8**: Type checking utilities
+
+## Installation
+
+```bash
+# Using UV package manager
+uv sync
+```
+
+## Project Structure
+
+- **Source Code**: All functionality in `peanuts/` package
+- **Configuration**: `config/` directory with YAML files
+- **Entry Point**: [main.py](mdc:main.py) for basic operations
+- **Outputs**: `outputs/` and `multirun/` for experiment results
+- **Documentation**: [README.md](mdc:README.md) and `papers/` directory
+
+## Development Workflow
+
+1. Modify configurations in `config/`
+2. Add/modify models in `peanuts/models/`
+3. Update datasets in `peanuts/dataset/`
+4. Run training via `python peanuts/train.py`
+5. Outputs stored in `outputs/` with Hydra organization

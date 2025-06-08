@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Training Workflow
+
+The training process is managed through [peanuts/train.py](mdc:peanuts/train.py) using Hydra configuration.
+
+## Configuration System
+
+- **Main Config**: [config/train.yaml](mdc:config/train.yaml) defines model, optimizer, and metrics settings
+- **Data Configs**: `config/data/` directory contains dataset-specific configurations
+- **Hydra Integration**: Enables easy experiment management and parameter sweeps
+
+## Training Process
+
+1. **Data Loading**: Dataset classes from [peanuts/dataset/](mdc:peanuts/dataset) handle seismic data
+2. **Model Selection**: Models from [peanuts/models/](mdc:peanuts/models) are instantiated via config
+3. **Training Loop**: Standard PyTorch training with evaluation after each epoch
+4. **Visualization**: [peanuts/plots/plot_event.py](mdc:peanuts/plots/plot_event.py) generates sample predictions
+5. **Evaluation**: [peanuts/evaluate.py](mdc:peanuts/evaluate.py) computes metrics
+
+## Running Training
+
+```bash
+python peanuts/train.py
+# or with config overrides
+python peanuts/train.py model.epochs=20 optimizer.learning_rate=0.001
+```
+
+## Key Components
+
+- **Loss Function**: CrossEntropyLoss for phase classification
+- **Optimizer**: Adam with ExponentialLR scheduler
+- **Device Management**: Automatic GPU/CPU detection via `utils.get_device()`
+- **Evaluation**: Both training and test set evaluation per epoch

@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Model Architectures
+
+The project implements several neural network architectures for seismic phase detection, all located in [peanuts/models/](mdc:peanuts/models).
+
+## Available Models
+
+- **[phase_net.py](mdc:peanuts/models/phase_net.py)**: Original PhaseNet architecture for seismic phase picking
+- **[attention_unet.py](mdc:peanuts/models/attention_unet.py)**: U-Net with attention mechanisms
+- **[r2_unet.py](mdc:peanuts/models/r2_unet.py)**: R2 U-Net variant with recurrent residual blocks
+- **[r2a_unet.py](mdc:peanuts/models/r2a_unet.py)**: R2 U-Net with attention gates
+
+## Model Configuration
+
+Models are selected via configuration in [config/train.yaml](mdc:config/train.yaml):
+
+```yaml
+model:
+  name: PhaseNet  # or AttentionUNet, R2UNet, R2AUNet
+  epochs: 10
+  path: ""  # for pre-trained weights
+  freezing_layers: 10
+  fine_tuning: false
+  transfer_learning: false
+```
+
+## Model Import System
+
+Models are imported via [peanuts/models/__init__.py](mdc:peanuts/models/__init__.py) and instantiated dynamically using `eval(config.model.name)()` in the training script.
+
+## Architecture Focus
+
+All models are designed for:
+- **Input**: 3-channel seismic waveforms (Z, N, E components)
+- **Output**: Phase probability predictions (P, S, noise)
+- **Task**: Semantic segmentation for time-series phase detection

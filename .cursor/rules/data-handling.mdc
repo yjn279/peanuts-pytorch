@@ -1,0 +1,44 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Data Handling
+
+The project uses specialized dataset classes for handling seismological data, located in [peanuts/dataset/](mdc:peanuts/dataset).
+
+## Available Datasets
+
+- **[sample_dataset.py](mdc:peanuts/dataset/sample_dataset.py)**: Basic sample dataset implementation
+- **[hakone_dataset.py](mdc:peanuts/dataset/hakone_dataset.py)**: Hakone volcanic region seismic data
+- **[geosciai_dataset.py](mdc:peanuts/dataset/geosciai_dataset.py)**: GeoSciAI dataset implementation
+- **[_sample_dataset.py](mdc:peanuts/dataset/_sample_dataset.py)**: Extended sample dataset with additional features
+
+## Dataset Configuration
+
+Datasets are configured in the `config/data/` directory and referenced in [config/train.yaml](mdc:config/train.yaml):
+
+```yaml
+data:
+  train:
+    dataset: HakoneDataset  # Dynamic class instantiation
+    event_dir: "path/to/events"
+    csv_path: "path/to/metadata.csv"
+    batch_size: 32
+  test:
+    dataset: HakoneDataset
+    event_dir: "path/to/test_events"
+    csv_path: "path/to/test_metadata.csv"
+    batch_size: 32
+```
+
+## Data Flow
+
+1. **Dataset Selection**: Class names are resolved dynamically via `eval(train_config.dataset)`
+2. **Data Loading**: PyTorch DataLoader handles batching and shuffling
+3. **Format**: Seismic waveforms with corresponding phase labels
+4. **Processing**: ObsPy integration for seismological data formats
+
+## Import System
+
+Dataset classes are imported via [peanuts/dataset/__init__.py](mdc:peanuts/dataset/__init__.py) to make them available for dynamic instantiation.

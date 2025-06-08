@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Evaluation and Metrics
+
+## Evaluation Framework
+
+The project includes comprehensive evaluation capabilities through [peanuts/evaluate.py](mdc:peanuts/evaluate.py) and a dedicated metrics system.
+
+## Key Components
+
+- **[peanuts/evaluate.py](mdc:peanuts/evaluate.py)**: Main evaluation function called during training
+- **[peanuts/metrics/](mdc:peanuts/metrics)**: Specialized metrics for seismological evaluation
+- **[peanuts/plots/](mdc:peanuts/plots)**: Visualization tools for results analysis
+- **[peanuts/plot.py](mdc:peanuts/plot.py)**: Additional plotting utilities
+
+## Metrics Configuration
+
+Metrics are configured in [config/train.yaml](mdc:config/train.yaml):
+
+```yaml
+metrics:
+  mph: 0.6    # Minimum phase height threshold
+  mpd: 10     # Minimum phase distance parameter
+```
+
+## Evaluation Process
+
+1. **Training Evaluation**: Called after each epoch on training data
+2. **Validation Evaluation**: Called after each epoch on test data
+3. **Visualization**: Sample predictions plotted via [peanuts/plots/plot_event.py](mdc:peanuts/plots/plot_event.py)
+4. **Metrics Computation**: Domain-specific seismological metrics
+
+## Visualization Features
+
+- **Event Plotting**: Visualizes waveforms with ground truth and predicted phases
+- **Output Format**: PNG files saved with epoch numbers
+- **Sample Analysis**: One sample per epoch for visual inspection
+
+## Integration
+
+- Evaluation is seamlessly integrated into the training loop in [peanuts/train.py](mdc:peanuts/train.py)
+- Results are automatically saved and organized by Hydra
+- Both loss-based and domain-specific metrics are computed
