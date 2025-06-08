@@ -1,0 +1,18 @@
+model:
+  name: PhaseNet
+  checkpoint_path: ""  # Path to trained model checkpoint
+  
+metrics:
+  mph: 0.6
+  mpd: 10
+
+# Maximum number of batches to generate plots for (to avoid too many plot files)
+max_plot_batches: 5
+
+defaults:
+  - data: hakone
+  - _self_
+
+hydra:
+  job:
+    chdir: True 
