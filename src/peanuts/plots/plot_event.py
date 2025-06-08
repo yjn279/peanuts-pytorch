@@ -6,6 +6,7 @@ def plot_event(x, y, pred, path=None):
 
     plt.subplot(511)
     plt.plot(x[0], "k", label="E", linewidth=1)
+    plt.vlines(y[0], 0, 1, colors="k", linestyles="dashed", linewidth=1)
     plt.legend(loc="upper right", fontsize="small")
 
     plt.subplot(512)

@@ -8,6 +8,8 @@ from torch.utils.data import DataLoader
 from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
 from .utils import get_device
+from .test import test_fn
+from .train import train_fn
 
 
 @hydra.main(version_base=None, config_path="../../config", config_name="train")
@@ -46,7 +48,7 @@ def train(config: DictConfig) -> None:
         print(f"Epoch: {epoch}/{epochs}")
 
         # Training
-        train(
+        train_fn(
             dataloader=train_dataloader,
             model=model,
             loss_fn=loss_fn,
@@ -54,7 +56,7 @@ def train(config: DictConfig) -> None:
         )
 
         # Validation
-        test(
+        test_fn(
             dataloader=test_dataloader,
             model=model,
             loss_fn=loss_fn,
@@ -84,15 +86,9 @@ def test(config: DictConfig) -> None:
     loss_fn = nn.CrossEntropyLoss()
 
     # Test
-    test(
+    test_fn(
         dataloader=test_dataloader,
         model=model,
         loss_fn=loss_fn,
     )
 
-# plot_event(
-#     x=x_event.squeeze().cpu().numpy(),
-#     y=y_event.squeeze().cpu().numpy(),
-#     pred=pred_event.squeeze().cpu().numpy(),
-#     path=f"{plot_prefix}_{path}.png",
-# )

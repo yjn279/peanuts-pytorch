@@ -9,7 +9,7 @@ from .utils.get_device import get_device
 from .utils.print_metrics import print_metrics, Metrics
 
 
-def train(
+def train_fn(
     dataloader: DataLoader,
     model: nn.Module,
     loss_fn: nn.Module,
