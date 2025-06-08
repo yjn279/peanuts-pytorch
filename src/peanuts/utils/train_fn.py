@@ -42,8 +42,8 @@ def train_fn(
             loss_value += loss.item()
 
             for y_event, pred_event in zip(y, pred):
-                pred_event = pred_event[..., 0].cpu().numpy()
-                y_event = y_event[..., 0].cpu().numpy()
+                y_event = y_event.squeeze().cpu().numpy()
+                pred_event = pred_event.squeeze().cpu().numpy()
 
                 p_metrics.count_up(pred_event[1], y_event[1])
                 s_metrics.count_up(pred_event[2], y_event[2])

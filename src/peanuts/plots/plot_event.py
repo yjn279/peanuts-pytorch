@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 
@@ -36,6 +38,9 @@ def plot_event(x, y, pred, path=None):
     plt.legend(loc="upper right", fontsize="small")
 
     if path is not None:
+        dirname = os.path.dirname(path)
+        
+        os.makedirs(dirname, exist_ok=True)
         plt.savefig(path)
 
     plt.close()

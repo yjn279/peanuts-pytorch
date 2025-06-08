@@ -35,8 +35,8 @@ def test_fn(
             # Calculate metrics and generate plots
             for x_event, y_event, pred_event, path_event in zip(x, y, pred, path):
                 x_event = x_event.squeeze().cpu().numpy()
-                pred_event = pred_event.squeeze().cpu().numpy()
                 y_event = y_event.squeeze().cpu().numpy()
+                pred_event = pred_event.squeeze().cpu().numpy()
 
                 p_metrics.count_up(pred_event[1], y_event[1])
                 s_metrics.count_up(pred_event[2], y_event[2])
