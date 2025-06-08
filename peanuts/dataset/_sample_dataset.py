@@ -38,11 +38,11 @@ class SampleDataset(Dataset):
         waveforms = self.normalize(waveforms)
         labels = self.generate_labels(waveforms, itp, its)
 
-        if self.transform:
-            image = self.transform(image)
+        # if self.transform:
+        #     image = self.transform(image)
 
-        if self.target_transform:
-            label = self.target_transform(label)
+        # if self.target_transform:
+        #     label = self.target_transform(label)
 
         waveforms = torch.from_numpy(waveforms).float()
         labels = torch.from_numpy(labels).float()
@@ -124,8 +124,8 @@ class SampleDataset(Dataset):
 def plot(waveforms, labels):
     import matplotlib.pyplot as plt
 
-    ymax = waveforms.max()
-    ymin = waveforms.min()
+    # ymax = waveforms.max()
+    # ymin = waveforms.min()
 
     plt.figure()
 

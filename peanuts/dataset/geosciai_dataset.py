@@ -52,11 +52,11 @@ class GeoSciAIDataset(Dataset):
         waveforms = self.normalize(waveforms)
         labels = self.generate_labels(waveforms, itp, its)
 
-        if self.transform:
-            image = self.transform(image)
+        # if self.transform:
+        #     image = self.transform(image)
 
-        if self.target_transform:
-            label = self.target_transform(label)
+        # if self.target_transform:
+        #     label = self.target_transform(label)
 
         waveforms = torch.from_numpy(waveforms).float()
         labels = torch.from_numpy(labels).float()
@@ -141,9 +141,10 @@ if __name__ == "__main__":
     path_dir = "data/npz/train/"
     path_csv = "data/npz/train.csv"
 
-    dataset = NPZDataset(path_dir, path_csv)
+    dataset = GeoSciAIDataset(path_dir, path_csv)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
     for x, y in dataloader:
         for waveforms, labels in zip(x, y):
-            plot(waveforms, labels)
+            # plot(waveforms, labels)
+            pass

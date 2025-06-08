@@ -42,8 +42,8 @@ class SampleDataset(Dataset):
 def plot(waveforms, labels):
     import matplotlib.pyplot as plt
 
-    ymax = waveforms.max()
-    ymin = waveforms.min()
+    # ymax = waveforms.max()
+    # ymin = waveforms.min()
 
     plt.figure()
 
