@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import Dataset
 
 
-class HakoneDataset(Dataset):
+class GeoSciAIDataset(Dataset):
     def __init__(
         self,
         path_dir,
@@ -16,6 +16,10 @@ class HakoneDataset(Dataset):
     ):
         self.path = path_dir
         self.df = pd.read_csv(path_csv)
+        self.df = self.df.fillna(-1)
+        self.df["itp"] = self.df["itp"].astype(int)
+        self.df["its"] = self.df["its"].astype(int)
+
         self.transform = transform
         self.target_transform = target_transform
 
@@ -27,14 +31,24 @@ class HakoneDataset(Dataset):
 
         # 波形データを取得
         path = os.path.join(self.path, series["fname"])
-        npz = np.load(path)
+        waveforms = np.load(path)["data"]
 
-        waveforms = npz["data"].transpose(2, 0, 1)
-        itp = npz["itp"]
-        its = npz["its"]
+        # 検測データを取得
+        itp = series["itp"]
+        itp = [] if itp < 0 else [itp]
+        itp = np.array(itp)
+        itp = itp * 200  # TODO: waveforms.csvを修正する。
 
-        waveforms, itp, its = self.random_shift(waveforms, itp, its, (-1000, 1000))
-        waveforms, itp, its = self.trim(waveforms, itp, its, (2000, 5001))
+        its = series["its"]
+        its = [] if its < 0 else [its]
+        its = np.array(its)
+        its = its * 200  # TODO: waveforms.csvを修正する。
+
+        shift = np.min(np.append(itp, its))
+        waveforms, itp, its = self.random_shift(
+            waveforms, itp, its, (500 - shift, 2500 - shift)
+        )
+        waveforms, itp, its = self.trim(waveforms, itp, its, (0, 6001))
         waveforms = self.normalize(waveforms)
         labels = self.generate_labels(waveforms, itp, its)
 
@@ -62,11 +76,14 @@ class HakoneDataset(Dataset):
             shift = np.random.randint(low=min, high=max + 1)
 
         waveforms = np.roll(waveforms, shift=shift, axis=1)
-        itp = itp + shift
-        its = its + shift
+        itp = (itp + shift) % length
+        its = (its + shift) % length
         return waveforms, itp, its
 
     def trim(self, waveforms, itp, its, range=None):
+        if range is None:
+            raise ValueError("range parameter must be provided")
+
         # 波形をトリミング
         start, end = range
         length = end - start
@@ -77,8 +94,8 @@ class HakoneDataset(Dataset):
         its -= start
 
         # 範囲外のインデックスを削除
-        itp = itp[(0 <= itp) & (itp < length)]
-        its = its[(0 <= its) & (its < length)]
+        itp = itp[0 <= itp < length]
+        its = its[0 <= its < length]
 
         return waveforms, itp, its
 
@@ -121,44 +138,16 @@ class HakoneDataset(Dataset):
         return labels
 
 
-def plot(waveforms, labels):
-    import matplotlib.pyplot as plt
-
-    # ymax = waveforms.max()
-    # ymin = waveforms.min()
-
-    plt.figure()
-
-    plt.subplot(411)
-    plt.plot(waveforms[0, :, 0], "k", label="E", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(412)
-    plt.plot(waveforms[1, :, 0], "k", label="N", linewidth=1)
-    plt.ylabel("Normalized Amplitude")
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(413)
-    plt.plot(waveforms[2, :, 0], "k", label="U", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(414)
-    plt.plot(labels[1, :, 0], "orange", label="P-Wave", linewidth=1)
-    plt.plot(labels[2, :, 0], "blue", label="S-Wave", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.show()
-
-
 if __name__ == "__main__":
     from torch.utils.data import DataLoader
 
-    path_dir = "/Users/yuji/Documents/data/hakone/npz/multi-labels/"
-    path_csv = "/Users/yuji/Documents/data/hakone/npz/multi-labels/waveforms.csv"
+    path_dir = "data/npz/train/"
+    path_csv = "data/npz/train.csv"
 
-    dataset = HakoneDataset(path_dir, path_csv)
+    dataset = GeoSciAIDataset(path_dir, path_csv)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
     for x, y in dataloader:
         for waveforms, labels in zip(x, y):
-            plot(waveforms, labels)
+            # plot(waveforms, labels)
+            pass

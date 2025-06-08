@@ -7,11 +7,11 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ExponentialLR
 from tqdm import tqdm
 
-from dataset import *  # noqa: F403
-from models import *  # noqa: F403
-from evaluate import evaluate
-from plots.plot_event import plot_event
-from utils import get_device
+from .dataset import *  # noqa: F403
+from .models import *  # noqa: F403
+from .evaluate import evaluate
+from .plots.plot_event import plot_event
+from .utils import get_device
 
 
 @hydra.main(version_base=None, config_path="../config", config_name="train")

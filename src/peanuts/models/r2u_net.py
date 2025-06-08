@@ -1,8 +1,8 @@
 import torch
-import torch.nn as nn
+from torch import nn
 from torchvision.transforms.v2 import CenterCrop
 
-from modules import Conv, ConvTranspose, RRCNN
+from ..modules import Conv, ConvTranspose, RRCNN
 
 
 class R2UNet(nn.Module):

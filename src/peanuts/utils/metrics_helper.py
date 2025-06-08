@@ -1,6 +1,6 @@
 from scipy.signal import find_peaks
 
-from metrics import Precision, Recall, F1Score
+from ..metrics import Precision, Recall, F1Score
 
 
 class MetricsHelper:

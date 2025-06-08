@@ -2,7 +2,7 @@ from scipy.signal import find_peaks
 import torch
 import numpy as np
 
-from utils import get_device
+from .utils import get_device
 
 
 def evaluate(dataloader, model, loss_fn):

@@ -1,7 +1,7 @@
 import torch
 
-from plots import plot_event
-from utils import get_device
+from .plots import plot_event
+from .utils import get_device
 
 
 def plot(dataloader, model):

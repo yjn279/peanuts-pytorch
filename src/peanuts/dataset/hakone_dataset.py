@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import Dataset
 
 
-class SampleDataset(Dataset):
+class HakoneDataset(Dataset):
     def __init__(
         self,
         path_dir,
@@ -33,7 +33,7 @@ class SampleDataset(Dataset):
         itp = npz["itp"]
         its = npz["its"]
 
-        # waveforms, itp, its = self.random_shift(waveforms, itp, its, (-1000, 1000))
+        waveforms, itp, its = self.random_shift(waveforms, itp, its, (-1000, 1000))
         waveforms, itp, its = self.trim(waveforms, itp, its, (2000, 5001))
         waveforms = self.normalize(waveforms)
         labels = self.generate_labels(waveforms, itp, its)
@@ -67,6 +67,9 @@ class SampleDataset(Dataset):
         return waveforms, itp, its
 
     def trim(self, waveforms, itp, its, range=None):
+        if range is None:
+            raise ValueError("range parameter must be provided")
+
         # 波形をトリミング
         start, end = range
         length = end - start
@@ -154,9 +157,9 @@ if __name__ == "__main__":
     from torch.utils.data import DataLoader
 
     path_dir = "/Users/yuji/Documents/data/hakone/npz/multi-labels/"
-    path_csv = "/Users/yuji/Documents/data/hakone/npz/multi-labels/sample.csv"
+    path_csv = "/Users/yuji/Documents/data/hakone/npz/multi-labels/waveforms.csv"
 
-    dataset = SampleDataset(path_dir, path_csv)
+    dataset = HakoneDataset(path_dir, path_csv)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
     for x, y in dataloader:

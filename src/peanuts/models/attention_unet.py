@@ -1,8 +1,8 @@
 import torch
-import torch.nn as nn
+from torch import nn
 from torchvision.transforms.v2 import CenterCrop
 
-from modules import Conv, ConvTranspose, AttentionGate
+from ..modules import Conv, ConvTranspose, AttentionGate
 
 
 class AttentionUNet(nn.Module):
