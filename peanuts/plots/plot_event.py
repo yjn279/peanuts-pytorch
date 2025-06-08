@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def plot_event(x, y, pred, path=None):
     plt.figure()
 
@@ -29,7 +30,7 @@ def plot_event(x, y, pred, path=None):
     if path is not None:
         plt.savefig(path)
 
-    else:   
+    else:
         plt.show()
 
     plt.close()

@@ -44,7 +44,6 @@ class Metrics:
         self.trues = 0
         self.true_positives = 0
 
-
     def count_up(self, pred, y):
         pred = find_peaks(pred, height=self.mph, distance=self.mpd)[0]
         y = find_peaks(y, height=self.mph, distance=self.mpd)[0]
@@ -62,7 +61,6 @@ class Metrics:
         self.trues += trues
         self.true_positives += true_positives
 
-    
     def print(self, **kwargs):
         precision = self.true_positives / self.positives
         recall = self.true_positives / self.trues
@@ -78,6 +76,7 @@ class Metrics:
 
 def plot(waveforms, labels, hoge):
     import matplotlib.pyplot as plt
+
     ymax = waveforms.max()
     ymin = waveforms.min()
 
@@ -107,4 +106,3 @@ def plot(waveforms, labels, hoge):
     plt.legend(loc="upper right", fontsize="small")
 
     plt.show()
-

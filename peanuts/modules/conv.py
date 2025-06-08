@@ -1,5 +1,6 @@
 import torch.nn as nn
 
+
 class Conv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1):
         super().__init__()
@@ -15,7 +16,6 @@ class Conv(nn.Module):
             nn.BatchNorm2d(num_features=out_channels),
             nn.ReLU(),
         )
-
 
     def forward(self, x):
         return self.layers(x)

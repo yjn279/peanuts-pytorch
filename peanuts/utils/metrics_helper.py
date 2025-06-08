@@ -2,6 +2,7 @@ from scipy.signal import find_peaks
 
 from metrics import Precision, Recall, F1Score
 
+
 class MetricsHelper:
     def __init__(self, mph=0.6, mpd=10, tol=300):
         self.mph = mph
@@ -15,12 +16,11 @@ class MetricsHelper:
         self.p_f1 = F1Score()
         self.s_f1 = F1Score()
 
-
     @property
     def value(self):
         self.p_f1.update(self.p_precision.value, self.p_recall.value)
         self.s_f1.update(self.s_precision.value, self.s_recall.value)
-        
+
         return {
             "p_precision": self.p_precision.value,
             "s_precision": self.s_precision.value,
@@ -29,7 +29,6 @@ class MetricsHelper:
             "p_f1": self.p_f1.value,
             "s_f1": self.s_f1.value,
         }
-
 
     def update(self, pred, y):
         p_pred = find_peaks(pred[1], height=self.mph, distance=self.mpd)[0]
@@ -42,7 +41,6 @@ class MetricsHelper:
         self.p_recall.update(p_pred, p_y)
         self.s_recall.update(s_pred, s_y)
 
-    
     def print(self, **kwargs):
         self.p_precision.print(**kwargs)
         self.p_recall.print(**kwargs)

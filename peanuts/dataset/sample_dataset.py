@@ -1,7 +1,6 @@
-import random
-
 import torch
 from torch.utils.data import Dataset
+
 
 class SampleDataset(Dataset):
     def __init__(
@@ -31,12 +30,18 @@ class SampleDataset(Dataset):
         y[0] = 1
         y[0, p_left:p_right] = torch.Tensor([0.7, 0.3, 0, 0.3, 0.7]).reshape(5, 1)
         y[1, p_left:p_right] = torch.Tensor([0.3, 0.7, 1, 0.7, 0.3]).reshape(5, 1)
-        y[0, s_left:s_right] = torch.Tensor([0.8, 0.6, 0.4, 0.2, 0, 0.2, 0.4, 0.6, 0.8]).reshape(9, 1)
-        y[2, s_left:s_right] = torch.Tensor([0.2, 0.4, 0.6, 0.8, 1, 0.8, 0.6, 0.4, 0.2]).reshape(9, 1)
+        y[0, s_left:s_right] = torch.Tensor(
+            [0.8, 0.6, 0.4, 0.2, 0, 0.2, 0.4, 0.6, 0.8]
+        ).reshape(9, 1)
+        y[2, s_left:s_right] = torch.Tensor(
+            [0.2, 0.4, 0.6, 0.8, 1, 0.8, 0.6, 0.4, 0.2]
+        ).reshape(9, 1)
         return x, y
+
 
 def plot(waveforms, labels):
     import matplotlib.pyplot as plt
+
     ymax = waveforms.max()
     ymin = waveforms.min()
 

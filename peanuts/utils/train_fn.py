@@ -5,6 +5,7 @@ from .get_device import get_device
 from .metrics_helper import MetricsHelper
 from metrics import Loss
 
+
 def train_fn(dataloader, model, loss_fn, optimizer, mph=0.6, mpd=10, tol=300):
     model.train()
     device = get_device()
@@ -34,7 +35,7 @@ def train_fn(dataloader, model, loss_fn, optimizer, mph=0.6, mpd=10, tol=300):
 
             # TODO:
             #   - picks.csv
-            #   - 
+            #   -
 
     loss.print(end=" ")
     metrics.print(end=" ")

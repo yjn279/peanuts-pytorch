@@ -1,5 +1,6 @@
 import torch.nn as nn
 
+
 class AttentionGate(nn.Module):
     def __init__(self, out_channels, hidden_channels):
         super().__init__()
@@ -33,11 +34,12 @@ class AttentionGate(nn.Module):
             nn.Sigmoid(),
         )
 
-
     def forward(self, x, g):
         h = self.weight_x(x)
         g = self.weight_g(g)
-        g = nn.functional.interpolate(g, size=h.shape[2:])  # resize with [height, width]
-        
+        g = nn.functional.interpolate(
+            g, size=h.shape[2:]
+        )  # resize with [height, width]
+
         alpha = self.layers(g + h)
         return alpha * x

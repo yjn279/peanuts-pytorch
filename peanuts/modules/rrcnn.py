@@ -1,5 +1,6 @@
 import torch.nn as nn
 
+
 class RRCNN(nn.Module):
     def __init__(
         self,
@@ -40,14 +41,14 @@ class RCL(nn.Module):
     ):
         super().__init__()
         self.t = t
-        
+
         self.conv = nn.Conv2d(
             in_channels=channels,
             out_channels=channels,
             kernel_size=kernel_size,
             padding="same",
         )
-        
+
     def forward(self, x):
         for _ in range(self.t):
             x = self.conv(x) + x

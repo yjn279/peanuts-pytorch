@@ -1,8 +1,7 @@
 from scipy.signal import find_peaks
-import torch
-from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
+
 
 def detect_peaks(ndarray, mph=0.6, mpd=100):
     # TODO: mpd=0.5 * sampling_rate
@@ -18,15 +17,15 @@ def count_true_positives(preds, trues, tol=300):
 
 
 def precision(true_positives, trues):
-  return true_positives / trues
+    return true_positives / trues
 
 
 def recall(true_positives, positives):
-  return true_positives / positives
+    return true_positives / positives
 
 
 def f1_score(precision, recall):
-  return 2 * precision * recall / (precision + recall)
+    return 2 * precision * recall / (precision + recall)
 
 
 def plot(waveforms, labels):

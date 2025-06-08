@@ -5,6 +5,7 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
+
 class GeoSciAIDataset(Dataset):
     def __init__(
         self,
@@ -44,7 +45,9 @@ class GeoSciAIDataset(Dataset):
         its = its * 200  # TODO: waveforms.csvを修正する。
 
         shift = np.min(np.append(itp, its))
-        waveforms, itp, its = self.random_shift(waveforms, itp, its, (500 - shift, 2500 - shift))
+        waveforms, itp, its = self.random_shift(
+            waveforms, itp, its, (500 - shift, 2500 - shift)
+        )
         waveforms, itp, its = self.trim(waveforms, itp, its, (0, 6001))
         waveforms = self.normalize(waveforms)
         labels = self.generate_labels(waveforms, itp, its)
@@ -54,11 +57,10 @@ class GeoSciAIDataset(Dataset):
 
         if self.target_transform:
             label = self.target_transform(label)
-            
+
         waveforms = torch.from_numpy(waveforms).float()
         labels = torch.from_numpy(labels).float()
         return waveforms, labels
-
 
     def random_shift(self, waveforms, itp, its, range=None):
         length = waveforms.shape[1]
@@ -78,7 +80,6 @@ class GeoSciAIDataset(Dataset):
         its = (its + shift) % length
         return waveforms, itp, its
 
-
     def trim(self, waveforms, itp, its, range=None):
         # 波形をトリミング
         start, end = range
@@ -95,13 +96,11 @@ class GeoSciAIDataset(Dataset):
 
         return waveforms, itp, its
 
-
     def normalize(self, waveforms):
         mean = waveforms.mean(axis=1, keepdims=True)
         std = waveforms.std(axis=1, keepdims=True)
         std = np.where(std, std, 1)  # ゼロ除算を回避
         return (waveforms - mean) / std
-
 
     def generate_labels(self, waveforms, itp, its, filter_width=60):
         # 正解データ

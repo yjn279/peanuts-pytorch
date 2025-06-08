@@ -8,6 +8,7 @@ from .metrics_helper import MetricsHelper
 from metrics import Loss
 from plots import plot_event
 
+
 def test_fn(dataloader, model, loss_fn, mph=0.6, mpd=10, tol=300):
     model.eval()
     device = get_device()

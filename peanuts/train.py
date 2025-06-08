@@ -8,10 +8,11 @@ from torch.optim.lr_scheduler import ExponentialLR
 from tqdm import tqdm
 
 from dataset import *
-from models import * 
+from models import *
 from evaluate import evaluate
 from plots.plot_event import plot_event
 from utils import get_device
+
 
 @hydra.main(version_base=None, config_path="../config", config_name="train")
 def train(config: DictConfig) -> None:
@@ -19,12 +20,16 @@ def train(config: DictConfig) -> None:
 
     # Train Dataloader
     train_config = config.data.train
-    train_dataset = eval(train_config.dataset)(train_config.event_dir, train_config.csv_path)
+    train_dataset = eval(train_config.dataset)(
+        train_config.event_dir, train_config.csv_path
+    )
     train_dataloader = DataLoader(train_dataset, train_config.batch_size, shuffle=True)
 
     # Validation Dataloader
     test_config = config.data.test
-    test_dataset = eval(test_config.dataset)(test_config.event_dir, test_config.csv_path)
+    test_dataset = eval(test_config.dataset)(
+        test_config.event_dir, test_config.csv_path
+    )
     test_dataloader = DataLoader(test_dataset, test_config.batch_size)
 
     # Model
@@ -53,7 +58,7 @@ def train(config: DictConfig) -> None:
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
-            
+
         evaluate(train_dataloader, model, loss_fn)
         evaluate(test_dataloader, model, loss_fn)
 
@@ -73,7 +78,7 @@ def train(config: DictConfig) -> None:
                         pred=pred.squeeze().cpu().numpy(),
                         path=f"{epoch}.png",
                     )
-                
+
                     break
                 break
 

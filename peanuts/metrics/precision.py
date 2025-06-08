@@ -1,16 +1,15 @@
 import numpy as np
 
+
 class Precision:
     def __init__(self, tol=300):
         self.tol = tol
         self.positives = 0
         self.true_positives = 0
 
-
     @property
     def value(self):
         return self.true_positives / self.positives
-
 
     def update(self, pred, y):
         # 差分がtol未満のインデックスの数をカウント
@@ -23,6 +22,5 @@ class Precision:
         self.positives += len(pred)
         self.true_positives += true_positives
 
-    
     def print(self, **kwargs):
         print(f"Precision: {self.value:.4f}", **kwargs)  # 小数第4位まで表示

@@ -5,6 +5,7 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
+
 class SampleDataset(Dataset):
     def __init__(
         self,
@@ -27,7 +28,7 @@ class SampleDataset(Dataset):
         # 波形データを取得
         path = os.path.join(self.path, series["fname"])
         npz = np.load(path)
-        
+
         waveforms = npz["data"].transpose(2, 0, 1)
         itp = npz["itp"]
         its = npz["its"]
@@ -42,11 +43,10 @@ class SampleDataset(Dataset):
 
         if self.target_transform:
             label = self.target_transform(label)
-            
+
         waveforms = torch.from_numpy(waveforms).float()
         labels = torch.from_numpy(labels).float()
         return waveforms, labels
-
 
     def random_shift(self, waveforms, itp, its, range=None):
         length = waveforms.shape[1]
@@ -66,7 +66,6 @@ class SampleDataset(Dataset):
         its = its + shift
         return waveforms, itp, its
 
-
     def trim(self, waveforms, itp, its, range=None):
         # 波形をトリミング
         start, end = range
@@ -83,13 +82,11 @@ class SampleDataset(Dataset):
 
         return waveforms, itp, its
 
-
     def normalize(self, waveforms):
         mean = waveforms.mean(axis=1, keepdims=True)
         std = waveforms.std(axis=1, keepdims=True)
         std = np.where(std, std, 1)  # ゼロ除算を回避
         return (waveforms - mean) / std
-
 
     def generate_labels(self, waveforms, itp, its, filter_width=60):
         # 正解データ
@@ -123,8 +120,10 @@ class SampleDataset(Dataset):
         labels[0, ...] = 1 - np.sum(labels[1:, ...], axis=0)
         return labels
 
+
 def plot(waveforms, labels):
     import matplotlib.pyplot as plt
+
     ymax = waveforms.max()
     ymin = waveforms.min()
 
@@ -149,7 +148,6 @@ def plot(waveforms, labels):
     plt.legend(loc="upper right", fontsize="small")
 
     plt.show()
-
 
 
 if __name__ == "__main__":
