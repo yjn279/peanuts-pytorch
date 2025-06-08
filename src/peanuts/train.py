@@ -14,7 +14,7 @@ from .plots.plot_event import plot_event
 from .utils import get_device
 
 
-@hydra.main(version_base=None, config_path="../config", config_name="train")
+@hydra.main(version_base=None, config_path="../../config", config_name="train")
 def train(config: DictConfig) -> None:
     device = get_device()
 
