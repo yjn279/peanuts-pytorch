@@ -17,7 +17,7 @@ class AttentionGate(nn.Module):
             kernel_size=1,
             padding="same",
             bias=False,
-        ),
+        )
 
         self.layers = nn.Sequential(
             nn.BatchNorm2d(num_features=out_channels),
