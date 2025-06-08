@@ -1,67 +1,52 @@
-import hydra
-from omegaconf import DictConfig
-import torch.optim as optim
+import torch
 from torch import nn
-from torch.optim.lr_scheduler import ExponentialLR
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
-from .utils import get_device
-from .utils.common import test, train
+from .utils.get_device import get_device
+from .utils.print_metrics import print_metrics, Metrics
 
 
-@hydra.main(version_base=None, config_path="../../config", config_name="train")
-def main(config: DictConfig) -> None:
+def train(
+    dataloader: DataLoader,
+    model: nn.Module,
+    loss_fn: nn.Module,
+    optimizer: torch.optim.Optimizer,
+) -> None:
     device = get_device()
 
-    # Train DataLoader
-    train_config = config.data.train
-    train_dataset = eval(train_config.dataset)(**train_config)
-    train_dataloader = DataLoader(
-        dataset=train_dataset,
-        batch_size=train_config.batch_size,
-        shuffle=True,
-    )
-    
-    # Test DataLoader
-    test_config = config.data.test
-    test_dataset = eval(test_config.dataset)(**test_config)
-    test_dataloader = DataLoader(
-        dataset=test_dataset,
-        batch_size=test_config.batch_size,
-        shuffle=False,
-    )
+    loss_value = 0
+    p_metrics = Metrics()
+    s_metrics = Metrics()
+    batch_count = len(dataloader)
 
-    # Model
-    model = eval(config.model.name)()
-    model = model.to(device)
+    for x, y, _ in tqdm(dataloader, desc="Training"):
+        model.train()
+        x, y = x.to(device), y.to(device)
 
-    # Optimizer
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=config.optimizer.learning_rate)
-    scheduler = ExponentialLR(optimizer, gamma=config.optimizer.gamma)
+        # Compute prediction error
+        pred = model(x)
+        loss = loss_fn(pred, y)
 
-    # Training
-    epochs = config.model.epochs
-    for epoch in range(1, epochs + 1):
-        print(f"Epoch: {epoch}/{epochs}")
+        # Backpropagation
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
 
-        train(
-            dataloader=train_dataloader,
-            model=model,
-            loss_fn=loss_fn,
-            optimizer=optimizer,
-        )
+        # Update metrics
+        with torch.no_grad():
+            model.eval()
+            pred = torch.nn.Softmax2d()(pred)
+            loss_value += loss.item()
 
-        test(
-            dataloader=test_dataloader,
-            model=model,
-            loss_fn=loss_fn,
-        )
+            for y_event, pred_event in zip(y, pred):
+                pred_event = pred_event[..., 0].cpu().numpy()
+                y_event = y_event[..., 0].cpu().numpy()
 
-        scheduler.step()
+                p_metrics.count_up(pred_event[1], y_event[1])
+                s_metrics.count_up(pred_event[2], y_event[2])
 
-
-if __name__ == "__main__":
-    main()
+    loss_value = loss_value / batch_count
+    print_metrics(loss_value, p_metrics, s_metrics)

@@ -1,49 +1,43 @@
-import hydra
-from omegaconf import DictConfig
+import torch
 from torch import nn
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
-from .utils import get_device
-from .utils.common import (
-    create_dataloader,
-    test,
-    print_metrics,
-)
+from .utils.get_device import get_device
+from .utils.print_metrics import print_metrics, Metrics
 
 
-@hydra.main(version_base=None, config_path="../../config", config_name="test")
-def main(config: DictConfig) -> None:
+def test(
+    dataloader: DataLoader,
+    model: nn.Module,
+    loss_fn: nn.Module,
+) -> None:
     device = get_device()
+    model.eval()
 
-    # Dataloaders
-    test_dataloader = create_dataloader(
-        config.data.test,
-        shuffle=False,
-    )
+    loss_value = 0
+    p_metrics = Metrics()
+    s_metrics = Metrics()
+    batch_count = len(dataloader)
 
-    # Model
-    model = eval(config.model.name)()
-    model = model.to(device)
+    with torch.no_grad():
+        for x, y, _ in tqdm(dataloader, desc="Validation"):
+            x, y = x.to(device), y.to(device)
 
-    # Loss function
-    loss_fn = nn.CrossEntropyLoss()
+            # Forward pass
+            pred = model(x)
+            loss_value += loss_fn(pred, y).item()
+            pred = torch.nn.Softmax2d()(pred)
 
-    # Evaluation
-    (
-        eval_loss,
-        eval_p_metrics,
-        eval_s_metrics,
-    ) = test(
-        model=model,
-        dataloader=test_dataloader,
-        loss_fn=loss_fn,
-        generate_plots=True,
-        plot_prefix="test",
-    )
+            # Calculate metrics and generate plots
+            for y_event, pred_event in zip(y, pred):
+                pred_event = pred_event[..., 0].cpu().numpy()
+                y_event = y_event[..., 0].cpu().numpy()
 
-    print_metrics(eval_loss, eval_p_metrics, eval_s_metrics)
+                p_metrics.count_up(pred_event[1], y_event[1])
+                s_metrics.count_up(pred_event[2], y_event[2])
 
-
-if __name__ == "__main__":
-    main()
+    loss_value = loss_value / batch_count
+    print_metrics(loss_value, p_metrics, s_metrics)
