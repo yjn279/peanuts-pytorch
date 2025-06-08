@@ -26,7 +26,8 @@ class HakoneDataset(Dataset):
         series = self.df.iloc[idx]
 
         # 波形データを取得
-        path = os.path.join(self.path, series["fname"])
+        fname = series["fname"]
+        path = os.path.join(self.path, fname)
         npz = np.load(path)
 
         waveforms = npz["data"].transpose(2, 0, 1)
@@ -122,46 +123,3 @@ class HakoneDataset(Dataset):
         # ノイズ
         labels[0, ...] = 1 - np.sum(labels[1:, ...], axis=0)
         return labels
-
-
-def plot(waveforms, labels):
-    import matplotlib.pyplot as plt
-
-    # ymax = waveforms.max()
-    # ymin = waveforms.min()
-
-    plt.figure()
-
-    plt.subplot(411)
-    plt.plot(waveforms[0, :, 0], "k", label="E", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(412)
-    plt.plot(waveforms[1, :, 0], "k", label="N", linewidth=1)
-    plt.ylabel("Normalized Amplitude")
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(413)
-    plt.plot(waveforms[2, :, 0], "k", label="U", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(414)
-    plt.plot(labels[1, :, 0], "orange", label="P-Wave", linewidth=1)
-    plt.plot(labels[2, :, 0], "blue", label="S-Wave", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.show()
-
-
-if __name__ == "__main__":
-    from torch.utils.data import DataLoader
-
-    path_dir = "/Users/yuji/Documents/data/hakone/npz/multi-labels/"
-    path_csv = "/Users/yuji/Documents/data/hakone/npz/multi-labels/waveforms.csv"
-
-    dataset = HakoneDataset(path_dir, path_csv)
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-
-    for x, y in dataloader:
-        for waveforms, labels in zip(x, y):
-            plot(waveforms, labels)

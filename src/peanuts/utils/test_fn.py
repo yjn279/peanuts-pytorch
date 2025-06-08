@@ -1,44 +1,52 @@
-import os
-
 import torch
+from torch import nn
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
+from ..dataset import *  # noqa: F403
+from ..models import *  # noqa: F403
 from .get_device import get_device
-from .metrics_helper import MetricsHelper
-from ..metrics import Loss
-from ..plots import plot_event
+from .print_metrics import print_metrics, Metrics
+from ..plots.plot_event import plot_event
 
 
-def test_fn(dataloader, model, loss_fn, mph=0.6, mpd=10, tol=300):
-    model.eval()
+def test_fn(
+    dataloader: DataLoader,
+    model: nn.Module,
+    loss_fn: nn.Module,
+) -> None:
     device = get_device()
+    model.eval()
 
-    loss = Loss(dataloader)
-    metrics = MetricsHelper(mph, mpd, tol)
+    loss_value = 0
+    p_metrics = Metrics()
+    s_metrics = Metrics()
+    batch_count = len(dataloader)
 
     with torch.no_grad():
-        for i, (x, y) in enumerate(tqdm(dataloader)):
+        for x, y, path in tqdm(dataloader, desc="Validation"):
             x, y = x.to(device), y.to(device)
 
-            # Loss
+            # Forward pass
             pred = model(x)
-            loss_batch = loss_fn(pred, y)
-            loss.update(loss_batch)
-
-            # Metrics
+            loss_value += loss_fn(pred, y).item()
             pred = torch.nn.Softmax2d()(pred)
-            pred = pred.squeeze().cpu().numpy()
-            x = x.squeeze().cpu().numpy()
-            y = y.squeeze().cpu().numpy()
-            metrics.update(pred, y)
+            
+            # Calculate metrics and generate plots
+            for x_event, y_event, pred_event, path_event in zip(x, y, pred, path):
+                x_event = x_event.squeeze().cpu().numpy()
+                pred_event = pred_event.squeeze().cpu().numpy()
+                y_event = y_event.squeeze().cpu().numpy()
 
-            # Plot
-            path = dataloader.dataset.df["fname"][i]
-            path = os.path.join("figures", path)
-            path = f"{path}.png"
+                p_metrics.count_up(pred_event[1], y_event[1])
+                s_metrics.count_up(pred_event[2], y_event[2])
+                
+                plot_event(
+                    x=x_event,
+                    y=y_event,
+                    pred=pred_event,
+                    path=f"{path_event}.png",
+                )
 
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            plot_event(x, y, pred, path)
-
-    loss.print(end=" ")
-    metrics.print(end=" ")
+    loss_value = loss_value / batch_count
+    print_metrics(loss_value, p_metrics, s_metrics)

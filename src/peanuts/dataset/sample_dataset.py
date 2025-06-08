@@ -5,6 +5,8 @@ from torch.utils.data import Dataset
 class SampleDataset(Dataset):
     def __init__(
         self,
+        path_dir=None,
+        path_csv=None,
         transform=None,
         target_transform=None,
     ):
@@ -36,44 +38,4 @@ class SampleDataset(Dataset):
         y[2, s_left:s_right] = torch.Tensor(
             [0.2, 0.4, 0.6, 0.8, 1, 0.8, 0.6, 0.4, 0.2]
         ).reshape(9, 1)
-        return x, y
-
-
-def plot(waveforms, labels):
-    import matplotlib.pyplot as plt
-
-    # ymax = waveforms.max()
-    # ymin = waveforms.min()
-
-    plt.figure()
-
-    plt.subplot(411)
-    plt.plot(waveforms[0, :, 0], "k", label="E", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(412)
-    plt.plot(waveforms[1, :, 0], "k", label="N", linewidth=1)
-    plt.ylabel("Normalized Amplitude")
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(413)
-    plt.plot(waveforms[2, :, 0], "k", label="U", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.subplot(414)
-    plt.plot(labels[1, :, 0], "orange", label="P-Wave", linewidth=1)
-    plt.plot(labels[2, :, 0], "blue", label="S-Wave", linewidth=1)
-    plt.legend(loc="upper right", fontsize="small")
-
-    plt.show()
-
-
-if __name__ == "__main__":
-    from torch.utils.data import DataLoader
-
-    dataset = SampleDataset()
-    dataloader = DataLoader(dataset, batch_size=2)
-
-    for x, y in dataloader:
-        for waveforms, labels in zip(x, y):
-            plot(waveforms, labels)
+        return x, y, idx

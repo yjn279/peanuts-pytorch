@@ -21,6 +21,7 @@ class Metrics:
         axis = 0 if trues > positives else 1  # metricsが1を超さないようにする
 
         diff = pred - y[:, np.newaxis]
+        # print(diff)
         true_positives = np.abs(diff) < self.tol
         true_positives = true_positives.any(axis=axis)
         true_positives = true_positives.sum()

@@ -1,41 +1,52 @@
 import torch
+from torch import nn
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
+from ..dataset import *  # noqa: F403
+from ..models import *  # noqa: F403
 from .get_device import get_device
-from .metrics_helper import MetricsHelper
-from ..metrics import Loss
+from .print_metrics import print_metrics, Metrics
 
 
-def train_fn(dataloader, model, loss_fn, optimizer, mph=0.6, mpd=10, tol=300):
-    model.train()
+def train_fn(
+    dataloader: DataLoader,
+    model: nn.Module,
+    loss_fn: nn.Module,
+    optimizer: torch.optim.Optimizer,
+) -> None:
     device = get_device()
 
-    loss = Loss(dataloader)
-    metrics = MetricsHelper(mph, mpd, tol)
+    loss_value = 0
+    p_metrics = Metrics()
+    s_metrics = Metrics()
+    batch_count = len(dataloader)
 
-    for x, y in tqdm(dataloader):
+    for x, y, _ in tqdm(dataloader, desc="Training"):
+        model.train()
         x, y = x.to(device), y.to(device)
 
         # Compute prediction error
         pred = model(x)
-        loss_batch = loss_fn(pred, y)
-        loss_batch.backward()
-        loss.update(loss_batch)
+        loss = loss_fn(pred, y)
 
         # Backpropagation
+        loss.backward()
         optimizer.step()
         optimizer.zero_grad()
 
+        # Update metrics
         with torch.no_grad():
+            model.eval()
             pred = torch.nn.Softmax2d()(pred)
-            for pred_event, y_event in zip(pred, y):
-                pred_event = pred_event.squeeze().cpu().numpy()
-                y_event = y_event.squeeze().cpu().numpy()
-                metrics.update(pred_event, y_event)
+            loss_value += loss.item()
 
-            # TODO:
-            #   - picks.csv
-            #   -
+            for y_event, pred_event in zip(y, pred):
+                pred_event = pred_event[..., 0].cpu().numpy()
+                y_event = y_event[..., 0].cpu().numpy()
 
-    loss.print(end=" ")
-    metrics.print(end=" ")
+                p_metrics.count_up(pred_event[1], y_event[1])
+                s_metrics.count_up(pred_event[2], y_event[2])
+
+    loss_value = loss_value / batch_count
+    print_metrics(loss_value, p_metrics, s_metrics)
