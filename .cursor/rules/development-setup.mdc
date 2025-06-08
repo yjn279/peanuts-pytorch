@@ -13,6 +13,7 @@ The project is configured via [pyproject.toml](mdc:pyproject.toml) with the foll
 - **Package Manager**: UV (evidenced by [uv.lock](mdc:uv.lock))
 - **Version**: 0.2.0
 - **Name**: peanuts
+- **Package Layout**: src/peanuts/
 
 ## Dependencies
 
@@ -37,16 +38,48 @@ uv sync
 
 ## Project Structure
 
-- **Source Code**: All functionality in `peanuts/` package
+- **Source Code**: All functionality in `src/peanuts/` package (src layout)
 - **Configuration**: `config/` directory with YAML files
 - **Entry Point**: [main.py](mdc:main.py) for basic operations
 - **Outputs**: `outputs/` and `multirun/` for experiment results
 - **Documentation**: [README.md](mdc:README.md) and `papers/` directory
 
+## Code Quality Tools
+
+**IMPORTANT**: Always run these commands after implementing any changes:
+
+### 1. Lint Code
+
+```bash
+uv run ruff check --fix
+```
+
+### 2. Format Code
+
+```bash
+uv run ruff format
+```
+
+### 3. Type Check
+```bash
+uv run ty check
+```
+
 ## Development Workflow
 
 1. Modify configurations in `config/`
-2. Add/modify models in `peanuts/models/`
-3. Update datasets in `peanuts/dataset/`
-4. Run training via `python peanuts/train.py`
-5. Outputs stored in `outputs/` with Hydra organization
+2. Add/modify models in `src/peanuts/models/`
+3. Update datasets in `src/peanuts/dataset/`
+4. **ALWAYS run code quality checks** after implementation:
+   - Lint: `uv run ruff check --fix`
+   - Format: `uv run ruff format`
+   - Type check: `uv run ty check`
+5. Run training via `python main.py` or training scripts
+6. Outputs stored in `outputs/` with Hydra organization
+
+## Code Quality Standards
+
+- **Zero tolerance** for linting errors
+- **All code must be formatted** with ruff
+- **Type annotations required** for new functions
+- **Run quality checks before committing** any changes
