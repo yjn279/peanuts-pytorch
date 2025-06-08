@@ -60,9 +60,9 @@ class DownConv(nn.Module):
         )
 
     def forward(self, x):
-        x = self.conv(x)
-        residual = self.down_conv(x)
-        return residual, x
+        residual = self.conv(x)
+        x = self.down_conv(residual)
+        return x, residual
 
 
 class UpConv(nn.Module):
@@ -96,7 +96,7 @@ class UpConv(nn.Module):
     def forward(self, x, residual):
         x = self.conv(x)
         residual = self.attention_gate(residual, x)
-
+        
         x = self.up_conv(x)
         x = CenterCrop(residual.shape[2:])(x)  #  [height, width]
         x = torch.concat([residual, x], dim=1)  # channel-wise
