@@ -1,0 +1,23 @@
+model:
+  name: PhaseNet
+  epochs: 10
+  path: ""
+  freezing_layers: 10
+  fine_tuning: false
+  transfer_learning: false
+  
+optimizer:
+  learning_rate: 0.01
+  gamma: 0.9
+  
+metrics:
+  mph: 0.6
+  mpd: 10
+
+defaults:
+  - data: hakone
+  - _self_
+
+hydra:
+  job:
+    chdir: True
