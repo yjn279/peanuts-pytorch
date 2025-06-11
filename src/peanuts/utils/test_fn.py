@@ -35,7 +35,7 @@ def test_fn(
             pred = torch.nn.Softmax2d()(pred)
             
             # Calculate metrics and generate plots
-            for x_event, y_event, pred_event, path_event in zip(x, y, pred, path):
+            for x_event, y_event, pred_event in zip(x, y, pred, path):
                 x_event = x_event.squeeze().cpu().numpy()
                 y_event = y_event.squeeze().cpu().numpy()
                 pred_event = pred_event.squeeze().cpu().numpy()

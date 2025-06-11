@@ -2,6 +2,8 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import numpy as np
+import os
 
 from .get_device import get_device
 from .picking_diffs import get_diffs
@@ -39,6 +41,10 @@ def output_fn(
                     pred=pred_event,
                     path=f"plots/waveforms/{path_event}.png",
                 )
+                
+                # Save pred_event as npz
+                os.makedirs("predictions", exist_ok=True)
+                np.savez(f"predictions/{path_event}.npz", pred=pred_event)
                 
                 diffs_p += get_diffs(pred_event[1], y_event[1], mph, mpd)
                 diffs_s += get_diffs(pred_event[2], y_event[2], mph, mpd)
