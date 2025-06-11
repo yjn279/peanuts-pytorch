@@ -1,5 +1,5 @@
 train:
-  event_dir: /Users/yuji/Documents/data/hakone/npz/multi-labels/ 
+  event_dir: /Users/yuji/Documents/data/hakone/npz/multi-labels/
   csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/waveforms.csv
   dataset: HakoneDataset
   batch_size: 64

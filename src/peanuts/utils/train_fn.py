@@ -50,3 +50,4 @@ def train_fn(
 
     loss_value = loss_value / batch_count
     print_metrics(loss_value, p_metrics, s_metrics)
+    # TODO: Save metrics

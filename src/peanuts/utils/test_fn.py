@@ -7,7 +7,6 @@ from ..dataset import *  # noqa: F403
 from ..models import *  # noqa: F403
 from .get_device import get_device
 from .print_metrics import print_metrics, Metrics
-from ..plots.plot_event import plot_event
 
 
 def test_fn(
@@ -16,7 +15,6 @@ def test_fn(
     loss_fn: nn.Module,
 ) -> None:
     device = get_device()
-    model.eval()
 
     loss_value = 0
     p_metrics = Metrics()
@@ -24,6 +22,8 @@ def test_fn(
     batch_count = len(dataloader)
 
     with torch.no_grad():
+        model.eval()
+        
         for x, y, path in tqdm(dataloader, desc="Validation"):
             x, y = x.to(device), y.to(device)
 
@@ -40,13 +40,7 @@ def test_fn(
 
                 p_metrics.count_up(pred_event[1], y_event[1])
                 s_metrics.count_up(pred_event[2], y_event[2])
-                
-                plot_event(
-                    x=x_event,
-                    y=y_event,
-                    pred=pred_event,
-                    path=f"{path_event}.png",
-                )
 
     loss_value = loss_value / batch_count
     print_metrics(loss_value, p_metrics, s_metrics)
+    # TODO: Save metrics

@@ -50,24 +50,13 @@ def main(config: DictConfig) -> None:
     optimizer = optim.Adam(model.parameters(), lr=config.optimizer.learning_rate)
     scheduler = ExponentialLR(optimizer, gamma=config.optimizer.gamma)
 
+    # Training
     epochs = config.model.epochs
     for epoch in range(1, epochs + 1):
         print(f"Epoch: {epoch}/{epochs}")
 
-        # Training
-        train_fn(
-            dataloader=train_dataloader,
-            model=model,
-            loss_fn=loss_fn,
-            optimizer=optimizer,
-        )
-
-        # Validation
-        test_fn(
-            dataloader=test_dataloader,
-            model=model,
-            loss_fn=loss_fn,
-        )
+        train_fn(train_dataloader, model, loss_fn, optimizer)
+        test_fn(test_dataloader, model, loss_fn)
 
         scheduler.step()
 

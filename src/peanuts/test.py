@@ -7,6 +7,7 @@ from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
 from .utils import get_device
 from .utils.test_fn import test_fn
+from .utils.export_fn import export_fn
 
 
 @hydra.main(version_base=None, config_path="../../config", config_name="test")
@@ -33,11 +34,8 @@ def main(config: DictConfig) -> None:
     loss_fn = nn.CrossEntropyLoss()
 
     # Test
-    test_fn(
-        dataloader=test_dataloader,
-        model=model,
-        loss_fn=loss_fn,
-    )
+    test_fn(test_dataloader, model, loss_fn)
+    export_fn(test_dataloader, model)
 
 
 if __name__ == "__main__":
