@@ -26,7 +26,7 @@ def test_fn(
     with torch.no_grad():
         model.eval()
 
-        for x, y, path in tqdm(dataloader, desc="Validation"):
+        for x, y, _ in tqdm(dataloader, desc="Validation"):
             x, y = x.to(device), y.to(device)
 
             # Forward pass
@@ -35,7 +35,7 @@ def test_fn(
             pred = torch.nn.Softmax2d()(pred)
 
             # Calculate metrics and generate plots
-            for x_event, y_event, pred_event in zip(x, y, pred, path):
+            for x_event, y_event, pred_event in zip(x, y, pred):
                 x_event = x_event.squeeze().cpu().numpy()
                 y_event = y_event.squeeze().cpu().numpy()
                 pred_event = pred_event.squeeze().cpu().numpy()

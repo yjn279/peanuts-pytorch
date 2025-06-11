@@ -47,6 +47,7 @@ class HakoneDataset(Dataset):
 
         waveforms = torch.from_numpy(waveforms).float()
         labels = torch.from_numpy(labels).float()
+        fname = os.path.splitext(fname)[0]
         return waveforms, labels, fname
 
     def random_shift(self, waveforms, itp, its, range=None):
