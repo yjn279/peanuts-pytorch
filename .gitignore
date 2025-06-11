@@ -13,7 +13,8 @@ wheels/
 .DS_Store
 
 # Hydra
-config/*.yaml
+config/**/*
+!config/**/*.py
 outputs/
 multirun/
 
