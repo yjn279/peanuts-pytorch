@@ -23,5 +23,9 @@ dev = [
 ]
 
 [project.scripts]
-train = "src.peanuts.train:main"
-test = "src.peanuts.test:main"
+train = "peanuts.train:main"
+test = "peanuts.test:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

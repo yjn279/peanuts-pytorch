@@ -1,6 +1,15 @@
-# peanuts-pytorch
+# peanuts
 
 A PyTorch implementation of neural network models for seismic phase detection and arrival time picking.
+
+## Getting Started
+
+```shell
+uv sync
+uv run train
+```
+
+---
 
 ## 🔬 Models
 

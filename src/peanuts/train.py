@@ -1,6 +1,6 @@
 import hydra
-from omegaconf import DictConfig
 import torch.optim as optim
+from omegaconf import DictConfig
 from torch import nn
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.utils.data import DataLoader

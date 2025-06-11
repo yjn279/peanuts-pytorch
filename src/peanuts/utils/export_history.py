@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 
 
@@ -25,9 +26,9 @@ def export_history(
     }
     df = pd.DataFrame([row], columns=row.keys())
     path = os.path.join(os.getcwd(), filepath)
-    
+
     if os.path.exists(path):
         df.to_csv(path, header=False, index=False, mode="a")
-        
+
     else:
         df.to_csv(path, index=False, mode="w")

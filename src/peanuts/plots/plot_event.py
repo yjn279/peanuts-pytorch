@@ -6,10 +6,10 @@ from scipy.signal import find_peaks
 
 def plot_event(x, y, pred, path=None):
     y_min, y_max = x.min(axis=1), x.max(axis=1)
-    
+
     itp = find_peaks(y[1], height=0.6, distance=10)[0]
     its = find_peaks(y[2], height=0.6, distance=10)[0]
-    
+
     plt.figure()
 
     plt.subplot(411)
@@ -39,7 +39,7 @@ def plot_event(x, y, pred, path=None):
 
     if path is not None:
         dirname = os.path.dirname(path)
-        
+
         os.makedirs(dirname, exist_ok=True)
         plt.savefig(path)
 

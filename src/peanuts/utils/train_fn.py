@@ -2,10 +2,10 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from .export_history import export_history
 
 from ..dataset import *  # noqa: F403
 from ..models import *  # noqa: F403
+from .export_history import export_history
 from .get_device import get_device
 from .metrics import Metrics
 

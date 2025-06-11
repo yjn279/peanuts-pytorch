@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torchvision.transforms.v2 import CenterCrop
 
-from ..modules import Conv, ConvTranspose, RRCNN
+from ..modules import RRCNN, Conv, ConvTranspose
 
 
 class R2UNet(nn.Module):

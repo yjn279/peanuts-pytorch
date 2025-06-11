@@ -2,10 +2,10 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from .export_history import export_history
 
 from ..dataset import *  # noqa: F403
 from ..models import *  # noqa: F403
+from .export_history import export_history
 from .get_device import get_device
 from .metrics import Metrics
 
@@ -25,7 +25,7 @@ def test_fn(
 
     with torch.no_grad():
         model.eval()
-        
+
         for x, y, path in tqdm(dataloader, desc="Validation"):
             x, y = x.to(device), y.to(device)
 
@@ -33,7 +33,7 @@ def test_fn(
             pred = model(x)
             loss_value += loss_fn(pred, y).item()
             pred = torch.nn.Softmax2d()(pred)
-            
+
             # Calculate metrics and generate plots
             for x_event, y_event, pred_event in zip(x, y, pred, path):
                 x_event = x_event.squeeze().cpu().numpy()
@@ -42,7 +42,7 @@ def test_fn(
 
                 p_metrics.count_up(pred_event[1], y_event[1])
                 s_metrics.count_up(pred_event[2], y_event[2])
-                
+
     # Save metrics
     if epoch is not None:
         export_history(

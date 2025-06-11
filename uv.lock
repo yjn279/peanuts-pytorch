@@ -671,7 +671,7 @@ wheels = [
 [[package]]
 name = "peanuts"
 version = "0.2.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "hydra-core" },
     { name = "matplotlib" },

@@ -6,8 +6,8 @@ from torch.utils.data import DataLoader
 from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
 from .utils import get_device
-from .utils.test_fn import test_fn
 from .utils.output_fn import output_fn
+from .utils.test_fn import test_fn
 
 
 @hydra.main(version_base=None, config_path="../../config", config_name="test")
