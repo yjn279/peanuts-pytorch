@@ -7,7 +7,7 @@ from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
 from .utils import get_device
 from .utils.test_fn import test_fn
-from .utils.export_fn import export_fn
+from .utils.output_fn import output_fn
 
 
 @hydra.main(version_base=None, config_path="../../config", config_name="test")
@@ -35,7 +35,7 @@ def main(config: DictConfig) -> None:
 
     # Test
     test_fn(test_dataloader, model, loss_fn)
-    export_fn(test_dataloader, model)
+    output_fn(test_dataloader, model)
 
 
 if __name__ == "__main__":

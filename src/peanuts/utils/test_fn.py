@@ -2,17 +2,19 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+from .export_history import export_history
 
 from ..dataset import *  # noqa: F403
 from ..models import *  # noqa: F403
 from .get_device import get_device
-from .print_metrics import print_metrics, Metrics
+from .metrics import Metrics
 
 
 def test_fn(
     dataloader: DataLoader,
     model: nn.Module,
     loss_fn: nn.Module,
+    epoch: int | None = None,
 ) -> None:
     device = get_device()
 
@@ -40,7 +42,17 @@ def test_fn(
 
                 p_metrics.count_up(pred_event[1], y_event[1])
                 s_metrics.count_up(pred_event[2], y_event[2])
-
-    loss_value = loss_value / batch_count
-    print_metrics(loss_value, p_metrics, s_metrics)
-    # TODO: Save metrics
+                
+    # Save metrics
+    if epoch is not None:
+        export_history(
+            filepath="history_valid.csv",
+            epoch=epoch,
+            loss=loss_value / batch_count,
+            precision_p=p_metrics.precision(),
+            recall_p=p_metrics.recall(),
+            f1score_p=p_metrics.f1(),
+            precision_s=s_metrics.precision(),
+            recall_s=s_metrics.recall(),
+            f1score_s=s_metrics.f1(),
+        )

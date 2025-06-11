@@ -1,5 +1,6 @@
-from scipy.signal import find_peaks
 import numpy as np
+
+from .find_peaks import find_peaks
 
 
 class Metrics:
@@ -13,8 +14,8 @@ class Metrics:
         self.true_positives = 0
 
     def count_up(self, pred, y):
-        pred = find_peaks(pred, height=self.mph, distance=self.mpd)[0]
-        y = find_peaks(y, height=self.mph, distance=self.mpd)[0]
+        pred = find_peaks(pred, mph=self.mph, mpd=self.mpd)
+        y = find_peaks(y, mph=self.mph, mpd=self.mpd)
 
         positives = len(pred)
         trues = len(y)
@@ -29,20 +30,19 @@ class Metrics:
         self.trues += trues
         self.true_positives += true_positives
 
-    def print(self, **kwargs):
-        precision = self.true_positives / self.positives
-        recall = self.true_positives / self.trues
-        f1_score = 2 * precision * recall / (precision + recall)
+    def precision(self) -> float:
+        if self.positives == 0:
+            return 0.0
+        return self.true_positives / self.positives
 
-        print(
-            f"Precision: {precision:.4f}",
-            f"Recall: {recall:.4f}",
-            f"F1-score: {f1_score:.4f}",
-            **kwargs,
-        )
+    def recall(self) -> float:
+        if self.trues == 0:
+            return 0.0
+        return self.true_positives / self.trues
 
-
-def print_metrics(loss: float, p_metrics: Metrics, s_metrics: Metrics) -> None:
-    print(f"Loss: {loss:.4f}", end=" ")
-    p_metrics.print(end=" ")
-    s_metrics.print()
+    def f1(self) -> float:
+        precision = self.precision()
+        recall = self.recall()
+        if precision + recall == 0:
+            return 0.0
+        return 2 * precision * recall / (precision + recall)

@@ -55,8 +55,8 @@ def main(config: DictConfig) -> None:
     for epoch in range(1, epochs + 1):
         print(f"Epoch: {epoch}/{epochs}")
 
-        train_fn(train_dataloader, model, loss_fn, optimizer)
-        test_fn(test_dataloader, model, loss_fn)
+        train_fn(train_dataloader, model, loss_fn, optimizer, epoch)
+        test_fn(test_dataloader, model, loss_fn, epoch)
 
         scheduler.step()
 
