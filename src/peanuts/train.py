@@ -1,4 +1,5 @@
 import hydra
+import torch
 import torch.optim as optim
 from omegaconf import DictConfig
 from torch import nn
@@ -59,6 +60,8 @@ def main(config: DictConfig) -> None:
         test_fn(test_dataloader, model, loss_fn, epoch)
 
         scheduler.step()
+
+    torch.save(model.state_dict(), "model_weights.pth")
 
 
 if __name__ == "__main__":
