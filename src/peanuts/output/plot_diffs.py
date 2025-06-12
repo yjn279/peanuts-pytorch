@@ -27,8 +27,8 @@ def plot_diffs(
     std = np.std(diffs)
 
     plt.text(
-        x=1,
-        y=1,
+        x=0.98,
+        y=0.98,
         s=f"Mean: {mean:.2f} s\nSD: {std:.2f} s",
         ha="right",
         va="top",
