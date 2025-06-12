@@ -9,7 +9,7 @@ class Loss:
 
     @value.setter
     def value(self, value):
-        self.value = value
+        self.__value = value
 
     def update(self, loss):
         self.__value += loss.item()

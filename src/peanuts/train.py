@@ -60,11 +60,12 @@ def main(config: DictConfig) -> None:
         print(f"Epoch: {epoch}/{epochs}")
 
         train_fn(train_dataloader, model, loss_fn, optimizer, epoch)
-        test_fn(test_dataloader, model, loss_fn, epoch)
+        # test_fn(test_dataloader, model, loss_fn, epoch)
+        scheduler.step()
 
         path = os.path.join("models", f"epoch_{epoch}", "model_weights.pth")
+        os.makedirs(os.path.dirname(path))
         torch.save(model.state_dict(), path)
-        scheduler.step()
 
 
 if __name__ == "__main__":
