@@ -12,6 +12,6 @@ validation:
 
 test:
   event_dir: /Users/yuji/Documents/data/hakone/npz/multi-labels/
-  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/valid.csv
+  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/test.csv
   dataset: HakoneDataset
   batch_size: 64
