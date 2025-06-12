@@ -57,12 +57,12 @@ class Metrics:
 
         diff = (pred - y[:, np.newaxis]) / self.sampling_rate
         true_positives = np.abs(diff) < self.tol
-        
+
         positives = len(pred)
         trues = len(y)
-        tp_positive = true_positives.any(axis=1).sum()  # 予測ラベルから見たTrue Positive
-        tp_true = true_positives.any(axis=0).sum()  # 正解ラベルから見たTrue Positive
-        
+        tp_positive = true_positives.any(axis=1).sum()  # ピックから見たTrue Positive
+        tp_true = true_positives.any(axis=0).sum()  # ラベルから見たTrue Positive
+
         self.positives += positives
         self.trues += trues
         self.tp_positive += tp_positive

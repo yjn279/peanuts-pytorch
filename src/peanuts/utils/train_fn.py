@@ -4,8 +4,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from ..output.export_history import export_history
-from .metrics import Metrics
-from .misc import get_device
+from .misc import Metrics, get_device
 
 
 def train_fn(
