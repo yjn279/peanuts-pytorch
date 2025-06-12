@@ -34,7 +34,9 @@ def get_diffs(
     if diffs.size == 0:
         return []
 
-    diffs = np.abs(diffs).min(axis=1)
+    # ラベルに最も近いピックを取得する
+    index = np.abs(diffs).argmin(axis=1)
+    diffs = diffs[np.arange(diffs.shape[0]), index]
     diffs = diffs.tolist()
     return diffs
 
