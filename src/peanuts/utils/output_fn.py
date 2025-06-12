@@ -37,7 +37,7 @@ def output_fn(
                     x=x_event,
                     y=y_event,
                     pred=pred_event,
-                    path=f"plots/waveforms/{path_event}.png",
+                    path=f"plots/waveforms/{path_event}.eps",
                 )
 
                 # export_predictions(path_event, pred_event)
@@ -45,5 +45,6 @@ def output_fn(
                 diffs_p += get_diffs(pred_event[1], y_event[1], mph, mpd)
                 diffs_s += get_diffs(pred_event[2], y_event[2], mph, mpd)
 
-    plot_diffs(diffs_p, "plots/diffs_p.png")
-    plot_diffs(diffs_s, "plots/diffs_s.png")
+    plot_diffs(diffs_p, "plots/diffs_p.eps")
+    plot_diffs(diffs_s, "plots/diffs_s.eps")
+    plot_diffs(diffs_p + diffs_s, "plots/diffs.eps")
