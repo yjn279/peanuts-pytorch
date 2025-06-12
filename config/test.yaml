@@ -1,13 +1,11 @@
 model:
   name: PhaseNet
-  checkpoint_path: ""  # Path to trained model checkpoint
+  epochs: 10
+  path: "outputs/2025-06-12/04-33-58/model_weights.pth"
   
 metrics:
   mph: 0.6
   mpd: 10
-
-# Maximum number of batches to generate plots for (to avoid too many plot files)
-max_plot_batches: 5
 
 defaults:
   - data: hakone
@@ -15,4 +13,4 @@ defaults:
 
 hydra:
   job:
-    chdir: True 
+    chdir: True

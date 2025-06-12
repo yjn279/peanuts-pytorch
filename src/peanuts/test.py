@@ -1,5 +1,7 @@
+import os
 import hydra
 from omegaconf import DictConfig
+import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
@@ -13,6 +15,7 @@ from .utils.test_fn import test_fn
 @hydra.main(version_base=None, config_path="../../config", config_name="test")
 def main(config: DictConfig) -> None:
     device = get_device()
+    print(f"Using device: {device}")
 
     # Test DataLoader
     test_config = config.data.test
@@ -25,10 +28,16 @@ def main(config: DictConfig) -> None:
         batch_size=test_config.batch_size,
         shuffle=False,
     )
-
+    
     # Model
     model = eval(config.model.name)()
     model = model.to(device)
+    
+    # Load model weights
+    path = os.path.join("../../..", config.model.path)
+    if len(path) > 0:
+        state_dict = torch.load(path, weights_only=True)
+        model.load_state_dict(state_dict)
 
     # Loss Function
     loss_fn = nn.CrossEntropyLoss()

@@ -16,6 +16,7 @@ from .utils.train_fn import train_fn
 @hydra.main(version_base=None, config_path="../../config", config_name="train")
 def main(config: DictConfig) -> None:
     device = get_device()
+    print(f"Using device: {device}")
 
     # Train DataLoader
     train_config = config.data.train
@@ -59,9 +60,8 @@ def main(config: DictConfig) -> None:
         train_fn(train_dataloader, model, loss_fn, optimizer, epoch)
         test_fn(test_dataloader, model, loss_fn, epoch)
 
+        torch.save(model.state_dict(), "model_weights.pth")
         scheduler.step()
-
-    torch.save(model.state_dict(), "model_weights.pth")
 
 
 if __name__ == "__main__":

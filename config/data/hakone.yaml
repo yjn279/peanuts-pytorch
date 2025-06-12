@@ -1,17 +1,17 @@
 train:
   event_dir: /Users/yuji/Documents/data/hakone/npz/multi-labels/
-  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/waveforms.csv
+  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/train.csv
   dataset: HakoneDataset
   batch_size: 64
 
 validation:
   event_dir: /Users/yuji/Documents/data/hakone/npz/multi-labels/
-  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/sample.csv
+  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/valid.csv
   dataset: HakoneDataset
   batch_size: 64
 
 test:
   event_dir: /Users/yuji/Documents/data/hakone/npz/multi-labels/
-  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/sample.csv
+  csv_path: /Users/yuji/Documents/data/hakone/npz/multi-labels/valid.csv
   dataset: HakoneDataset
   batch_size: 64
