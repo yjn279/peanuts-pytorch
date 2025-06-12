@@ -1,13 +1,14 @@
 import os
+
 import hydra
-from omegaconf import DictConfig
 import torch
+from omegaconf import DictConfig
 from torch import nn
 from torch.utils.data import DataLoader
 
 from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
-from .utils import get_device
+from .utils.misc import get_device
 from .utils.output_fn import output_fn
 from .utils.test_fn import test_fn
 
@@ -28,11 +29,11 @@ def main(config: DictConfig) -> None:
         batch_size=test_config.batch_size,
         shuffle=False,
     )
-    
+
     # Model
     model = eval(config.model.name)()
     model = model.to(device)
-    
+
     # Load model weights
     path = os.path.join("../../..", config.model.path)
     if len(path) > 0:

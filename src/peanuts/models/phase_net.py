@@ -2,7 +2,8 @@ import torch
 from torch import nn
 from torchvision.transforms.v2 import CenterCrop
 
-from ..modules import Conv, ConvTranspose
+from ..modules.conv import Conv
+from ..modules.conv_transpose import ConvTranspose
 
 
 class PhaseNet(nn.Module):

@@ -3,11 +3,10 @@ from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from ..plots.plot_diffs import plot_diffs
-from ..plots.plot_event import plot_event
-from .export_predictions import export_predictions
-from .get_device import get_device
-from .picking_diffs import get_diffs
+from ..output.export_predictions import export_predictions
+from ..output.plot_diffs import plot_diffs
+from ..output.plot_event import plot_event
+from .misc import get_device, get_diffs
 
 
 def output_fn(

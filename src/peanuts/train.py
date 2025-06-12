@@ -1,3 +1,5 @@
+import os
+
 import hydra
 import torch
 import torch.optim as optim
@@ -8,7 +10,7 @@ from torch.utils.data import DataLoader
 
 from .dataset import *  # noqa: F403
 from .models import *  # noqa: F403
-from .utils import get_device
+from .utils.misc import get_device
 from .utils.test_fn import test_fn
 from .utils.train_fn import train_fn
 
@@ -60,7 +62,8 @@ def main(config: DictConfig) -> None:
         train_fn(train_dataloader, model, loss_fn, optimizer, epoch)
         test_fn(test_dataloader, model, loss_fn, epoch)
 
-        torch.save(model.state_dict(), "model_weights.pth")
+        path = os.path.join("models", f"epoch_{epoch}", "model_weights.pth")
+        torch.save(model.state_dict(), path)
         scheduler.step()
 
 

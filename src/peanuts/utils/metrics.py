@@ -1,6 +1,6 @@
 import numpy as np
 
-from .find_peaks import find_peaks
+from .misc import find_peaks
 
 
 class Metrics:

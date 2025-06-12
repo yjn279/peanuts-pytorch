@@ -3,11 +3,9 @@ from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from ..dataset import *  # noqa: F403
-from ..models import *  # noqa: F403
-from .export_history import export_history
-from .get_device import get_device
+from ..output.export_history import export_history
 from .metrics import Metrics
+from .misc import get_device
 
 
 def test_fn(

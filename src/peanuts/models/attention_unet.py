@@ -2,7 +2,9 @@ import torch
 from torch import nn
 from torchvision.transforms.v2 import CenterCrop
 
-from ..modules import AttentionGate, Conv, ConvTranspose
+from ..modules.attention_gate import AttentionGate
+from ..modules.conv import Conv
+from ..modules.conv_transpose import ConvTranspose
 
 
 class AttentionUNet(nn.Module):
